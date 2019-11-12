@@ -40,9 +40,11 @@ class _HomePageState extends State<HomePage> {
                 if (snapShot.hasData) {
                   var data = json.decode(snapShot.data.toString());
                   List<Map> swiper = (data['data']['slides'] as List).cast();
+                  List<Map> navigatorList = (data['data']['category'] as List).cast();
                   return Column(
                     children: <Widget>[
                       SwiperDIY(swiperDataList: swiper),
+                      TopNavigator(navigatorList: navigatorList,)
                     ],
                   );
                 } else {
@@ -88,6 +90,38 @@ class SwiperDIY extends StatelessWidget {
         scale: 0.75,
         duration: 1000,
       ),
+    );
+  }
+}
+
+class TopNavigator extends StatelessWidget {
+
+  final List navigatorList;
+
+  const TopNavigator({Key key, this.navigatorList}) : super(key: key);
+
+  Widget _getNavigatorItem(BuildContext context, item) {
+    return Column(
+      children: <Widget>[
+        Image.network(item['image'], width: ScreenUtil().setWidth(95),),
+        Text(item['mallCategoryName'])
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (navigatorList.length > 10) {
+      navigatorList.removeRange(10, navigatorList.length);
+    }
+    return Container(
+      height: ScreenUtil().setHeight(320),
+      child: GridView.count(
+        crossAxisCount: 5,
+        children: navigatorList.map((item) {
+          return _getNavigatorItem(context, item);
+        }).toList(),
+      )
     );
   }
 }
