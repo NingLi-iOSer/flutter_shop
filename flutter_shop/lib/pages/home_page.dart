@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -74,8 +74,10 @@ class SwiperDIY extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     return Container(
-      height: 200,
+      width: ScreenUtil().setWidth(750),
+      height: ScreenUtil().setHeight(333),
       child: Swiper(
         itemBuilder: (context, index) {
           return Image.network(swiperDataList[index]['image'].toString(), fit: BoxFit.fill,);
