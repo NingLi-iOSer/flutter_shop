@@ -41,10 +41,12 @@ class _HomePageState extends State<HomePage> {
                   var data = json.decode(snapShot.data.toString());
                   List<Map> swiper = (data['data']['slides'] as List).cast();
                   List<Map> navigatorList = (data['data']['category'] as List).cast();
+                  String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
                   return Column(
                     children: <Widget>[
                       SwiperDIY(swiperDataList: swiper),
-                      TopNavigator(navigatorList: navigatorList,)
+                      TopNavigator(navigatorList: navigatorList),
+                      AdBanner(adPicture: adPicture),
                     ],
                   );
                 } else {
@@ -101,11 +103,16 @@ class TopNavigator extends StatelessWidget {
   const TopNavigator({Key key, this.navigatorList}) : super(key: key);
 
   Widget _getNavigatorItem(BuildContext context, item) {
-    return Column(
-      children: <Widget>[
-        Image.network(item['image'], width: ScreenUtil().setWidth(95),),
-        Text(item['mallCategoryName'])
-      ],
+    return InkWell(
+      onTap: () {
+        print('Tap Navigator');
+      },
+      child: Column(
+        children: <Widget>[
+          Image.network(item['image'], width: ScreenUtil().setWidth(95),),
+          Text(item['mallCategoryName'])
+        ],
+      ),
     );
   }
 
@@ -115,13 +122,32 @@ class TopNavigator extends StatelessWidget {
       navigatorList.removeRange(10, navigatorList.length);
     }
     return Container(
-      height: ScreenUtil().setHeight(320),
+      margin: EdgeInsets.only(top: 5),
+      height: ScreenUtil().setHeight(250),
+      padding: EdgeInsets.all(3),
       child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
+        padding: EdgeInsets.all(5),
         children: navigatorList.map((item) {
           return _getNavigatorItem(context, item);
         }).toList(),
       )
+    );
+  }
+}
+
+class AdBanner extends StatelessWidget {
+
+  final String adPicture;
+
+  const AdBanner({Key key, this.adPicture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      child: Image.network(adPicture),
     );
   }
 }
