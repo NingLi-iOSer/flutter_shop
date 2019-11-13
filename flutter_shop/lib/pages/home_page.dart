@@ -106,10 +106,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  void loadHomePageBelowContent() {
-    
-  }
-
   Widget hotGoodsTitle = Container(
     margin: EdgeInsets.only(top: 8),
     alignment: Alignment.center,
