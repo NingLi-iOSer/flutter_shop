@@ -22,9 +22,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   bool get wantKeepAlive => true;
+  
   @override
-  void updateKeepAlive() {
-    super.updateKeepAlive();
+  void initState() { 
+    super.initState();
+    request('homePageBelowContent', 1).then((value) {
+      print(value);
+    });
   }
   
   @override
@@ -85,7 +89,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   }
 
   void loadHomePageContent() {
-    getHomePageContent().then((value) {
+    var parameters = {'lon': '115.12345', 'lat': '39.22112'};
+    request('homePageContent', parameters).then((value) {
       setState(() {
         homeContent = value.toString();
       });
