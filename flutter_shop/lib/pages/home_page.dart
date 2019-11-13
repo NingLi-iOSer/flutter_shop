@@ -13,12 +13,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   TextEditingController typeController = TextEditingController();
   String homeContent = '暂未加载首页数据';
   // banner 数据
   List swiperDataList;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
