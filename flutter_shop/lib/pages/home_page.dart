@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -42,11 +43,15 @@ class _HomePageState extends State<HomePage> {
                   List<Map> swiper = (data['data']['slides'] as List).cast();
                   List<Map> navigatorList = (data['data']['category'] as List).cast();
                   String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
+                  String leaderImage = data['data']['shopInfo']['leaderImage'].toString();
+                  String leaderPhone = data['data']['shopInfo']['leaderPhone'].toString();
+
                   return Column(
                     children: <Widget>[
                       SwiperDIY(swiperDataList: swiper),
                       TopNavigator(navigatorList: navigatorList),
                       AdBanner(adPicture: adPicture),
+                      LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
                     ],
                   );
                 } else {
@@ -71,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// 轮播器
 class SwiperDIY extends StatelessWidget {
   const SwiperDIY({Key key, this.swiperDataList}) : super(key: key);
 
@@ -96,6 +102,7 @@ class SwiperDIY extends StatelessWidget {
   }
 }
 
+// 分类
 class TopNavigator extends StatelessWidget {
 
   final List navigatorList;
@@ -123,7 +130,7 @@ class TopNavigator extends StatelessWidget {
     }
     return Container(
       margin: EdgeInsets.only(top: 5),
-      height: ScreenUtil().setHeight(250),
+      height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(3),
       child: GridView.count(
         physics: NeverScrollableScrollPhysics(),
@@ -149,5 +156,33 @@ class AdBanner extends StatelessWidget {
       margin: EdgeInsets.only(top: 5),
       child: Image.network(adPicture),
     );
+  }
+}
+
+// 店长电话
+class LeaderPhone extends StatelessWidget {
+
+  final String leaderImage;
+  final String leaderPhone;
+
+  const LeaderPhone({Key key, this.leaderImage, this.leaderPhone}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        onTap: _launchURL,
+        child: Image.network(leaderImage),
+      ),
+    );
+  }
+
+  void _launchURL() async {
+    String url = 'tel:' + leaderPhone;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('url 无效');
+    }
   }
 }
