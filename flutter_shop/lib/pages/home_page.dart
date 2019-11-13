@@ -5,6 +5,7 @@ import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() { 
     super.initState();
-    loadHomePageBelowContent();
+    // loadHomePageBelowContent();
   }
   
   @override
@@ -42,29 +43,33 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           title: Text('百姓生活+'),
         ),
         body: Container(
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-              future: request('homePageContent', formData: parameters),
-              builder: (context, snapShot) {
-                if (snapShot.hasData) {
-                  var data = json.decode(snapShot.data.toString());
-                  List<Map> swiper = (data['data']['slides'] as List).cast();
-                  List<Map> navigatorList = (data['data']['category'] as List).cast();
-                  String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
-                  String leaderImage = data['data']['shopInfo']['leaderImage'].toString();
-                  String leaderPhone = data['data']['shopInfo']['leaderPhone'].toString();
-                  List<Map> recommendList = (data['data']['recommend'] as List).cast();
-                  String floor1Pic = data['data']['floor1Pic']['PICTURE_ADDRESS'].toString();
-                  List<Map> floor1Content = (data['data']['floor1'] as List).cast();
-                  String floor2Pic = data['data']['floor2Pic']['PICTURE_ADDRESS'].toString();
-                  List<Map> floor2Content = (data['data']['floor2'] as List).cast();
-                  String floor3Pic = data['data']['floor3Pic']['PICTURE_ADDRESS'].toString();
-                  List<Map> floor3Content = (data['data']['floor3'] as List).cast();
+          child:FutureBuilder(
+            future: request('homePageContent', formData: parameters),
+            builder: (context, snapShot) {
+              if (snapShot.hasData) {
+                var data = json.decode(snapShot.data.toString());
+                List<Map> swiper = (data['data']['slides'] as List).cast();
+                List<Map> navigatorList = (data['data']['category'] as List).cast();
+                String adPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'].toString();
+                String leaderImage = data['data']['shopInfo']['leaderImage'].toString();
+                String leaderPhone = data['data']['shopInfo']['leaderPhone'].toString();
+                List<Map> recommendList = (data['data']['recommend'] as List).cast();
+                String floor1Pic = data['data']['floor1Pic']['PICTURE_ADDRESS'].toString();
+                List<Map> floor1Content = (data['data']['floor1'] as List).cast();
+                String floor2Pic = data['data']['floor2Pic']['PICTURE_ADDRESS'].toString();
+                List<Map> floor2Content = (data['data']['floor2'] as List).cast();
+                String floor3Pic = data['data']['floor3Pic']['PICTURE_ADDRESS'].toString();
+                List<Map> floor3Content = (data['data']['floor3'] as List).cast();
 
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SwiperDIY(swiperDataList: swiper),
+                return EasyRefresh(
+                  footer: ClassicalFooter(
+                    showInfo: false,
+                    noMoreText: '',
+                    loadReadyText: '上拉加载'
+                  ),
+                  child: ListView(
+                    children: <Widget>[
+                      SwiperDIY(swiperDataList: swiper),
                         TopNavigator(navigatorList: navigatorList),
                         AdBanner(adPicture: adPicture),
                         LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
@@ -75,33 +80,34 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         FloorContent(floorContentList: floor2Content),
                         FloorTitle(picture: floor3Pic),
                         FloorContent(floorContentList: floor3Content),
-                        hotGoodsTitle,
                         _hotGoods()
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Text('Loading...'),
-                  );
-                }
-              },
-            ),
-          )
+                    ],
+                  ),
+                  onLoad: () async {
+                    await request('homePageBelowContent', formData: 1).then((value) {
+                      var data = json.decode(value.toString());
+                      List<Map> newGoodsList = (data['data'] as List).cast();
+                      setState(() {
+                        hotGoodsList.addAll(newGoodsList);
+                        page++;
+                      });
+                    });
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text('Loading...'),
+                );
+              }
+            },
+          ),
         )
       )
     );
   }
 
   void loadHomePageBelowContent() {
-    request('homePageBelowContent', formData: 1).then((value) {
-      var data = json.decode(value.toString());
-      List<Map> newGoodsList = (data['data'] as List).cast();
-      setState(() {
-        hotGoodsList.addAll(newGoodsList);
-        page++;
-      });
-    });
+    
   }
 
   Widget hotGoodsTitle = Container(
@@ -119,7 +125,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     child: Text('火爆专区'),
   );
 
-  Widget _hotGoods() {
+  Widget _wrapList() {
     List<Widget> goodsList = hotGoodsList.map((value){
       return InkWell(
         onTap: (){},
@@ -145,6 +151,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               Row(
                 children: <Widget>[
                   Text('¥${value['mallPrice']}'),
+                  Spacer(),
                   Text(
                     '¥${value['price']}',
                     style: TextStyle(
@@ -152,6 +159,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                       decoration: TextDecoration.lineThrough
                     ),
                   ),
+                  Spacer(),
                 ],
               )
             ],
@@ -168,6 +176,17 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         children: goodsList,
       );
     }
+  }
+
+  Widget _hotGoods() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          hotGoodsTitle,
+          _wrapList()
+        ],
+      ),
+    );
   }
 }
 
