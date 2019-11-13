@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop/model/category_model.dart';
 import '../service/service_method.dart';
 import 'dart:convert';
 
@@ -22,7 +23,9 @@ class _CategoryPageState extends State<CategoryPage> {
 
   void getCategoryContent() {
     request('getCategory').then((value){
-      print(value);
+      var data = json.decode(value.toString());
+      CategoryBigListModel list = CategoryBigListModel.fromJson(data['data']);
+      list.data.forEach((item)=>print(item.mallCategoryName));
     });
   }
 }
