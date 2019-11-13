@@ -22,11 +22,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   bool get wantKeepAlive => true;
-
   @override
-  void initState() {
-    super.initState();
-    // loadHomePageContent();
+  void updateKeepAlive() {
+    super.updateKeepAlive();
   }
   
   @override
@@ -49,6 +47,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   String leaderImage = data['data']['shopInfo']['leaderImage'].toString();
                   String leaderPhone = data['data']['shopInfo']['leaderPhone'].toString();
                   List<Map> recommendList = (data['data']['recommend'] as List).cast();
+                  String floor1Pic = data['data']['floor1Pic']['PICTURE_ADDRESS'].toString();
+                  List<Map> floor1Content = (data['data']['floor1'] as List).cast();
+                  String floor2Pic = data['data']['floor2Pic']['PICTURE_ADDRESS'].toString();
+                  List<Map> floor2Content = (data['data']['floor2'] as List).cast();
+                  String floor3Pic = data['data']['floor3Pic']['PICTURE_ADDRESS'].toString();
+                  List<Map> floor3Content = (data['data']['floor3'] as List).cast();
 
                   return SingleChildScrollView(
                     child: Column(
@@ -57,7 +61,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         TopNavigator(navigatorList: navigatorList),
                         AdBanner(adPicture: adPicture),
                         LeaderPhone(leaderImage: leaderImage, leaderPhone: leaderPhone),
-                        Recommend(recommendList: recommendList,)
+                        Recommend(recommendList: recommendList),
+                        FloorTitle(picture: floor1Pic),
+                        FloorContent(floorContentList: floor1Content),
+                        FloorTitle(picture: floor2Pic),
+                        FloorContent(floorContentList: floor2Content),
+                        FloorTitle(picture: floor3Pic),
+                        FloorContent(floorContentList: floor3Content),
                       ],
                     ),
                   );
@@ -224,6 +234,7 @@ class Recommend extends StatelessWidget {
       child: Container(
         width: ScreenUtil().setWidth(250),
         height: ScreenUtil().setHeight(330),
+        padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -236,6 +247,7 @@ class Recommend extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Image.network(recommendList[index]['image'].toString()),
+            Spacer(),
             Text('¥${recommendList[index]['mallPrice']}'),
             Text(
               '¥${recommendList[index]['price']}',
@@ -274,6 +286,79 @@ class Recommend extends StatelessWidget {
         children: <Widget>[
           _titleWidget(),
           _itemList()
+        ],
+      ),
+    );
+  }
+}
+
+// 楼层标题
+class FloorTitle extends StatelessWidget {
+
+  final String picture;
+
+  const FloorTitle({Key key, this.picture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 8),
+      child: Image.network(picture),
+    );
+  }
+}
+
+// 楼层内容
+class FloorContent extends StatelessWidget {
+
+  final List floorContentList;
+
+  const FloorContent({Key key, this.floorContentList}) : super(key: key);
+
+  Widget _firstRow() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          _goodItem(floorContentList[0]['image'].toString()),
+          Column(
+            children: <Widget>[
+              _goodItem(floorContentList[1]['image'].toString()),
+              _goodItem(floorContentList[2]['image'].toString()),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _otherGoods() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          _goodItem(floorContentList[3]['image'].toString()),
+          _goodItem(floorContentList[4]['image'].toString()),
+        ],
+      ),
+    );
+  }
+
+  Widget _goodItem(pic) {
+    return Container(
+      width: ScreenUtil().setWidth(375),
+      child: InkWell(
+        onTap: (){},
+        child: Image.network(pic),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          _firstRow(),
+          _otherGoods()
         ],
       ),
     );
