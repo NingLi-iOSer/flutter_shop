@@ -5,6 +5,7 @@ class ChildCategory with ChangeNotifier {
   List<BxMallSubDtoModel> childCategoryList = [];
   int childIndex = 0;
   String categoryId = '4';
+  String categorySubId = '';
 
   void getChildCategory(String categoryId, List<BxMallSubDtoModel> list) {
     childIndex = 0;
@@ -20,8 +21,9 @@ class ChildCategory with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeChildIndex(int index) {
+  void changeChildIndex(int index, String categorySubId) {
     childIndex = index;
+    categorySubId = categorySubId;
     notifyListeners();
   }
 }

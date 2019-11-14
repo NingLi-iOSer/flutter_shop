@@ -173,7 +173,11 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
     await request('getMallGoods', formData: formData).then((value){
       var data = json.decode(value.toString());
       CategoryGoodsListModel model = CategoryGoodsListModel.fromJson(data);
-      Provider.of<CategoryGoodsListProvider>(context).getCategoryGoodsList(model.data);
+      if (model.data == null) {
+        Provider.of<CategoryGoodsListProvider>(context).getCategoryGoodsList([]);
+      } else {
+        Provider.of<CategoryGoodsListProvider>(context).getCategoryGoodsList(model.data);
+      }
     });
   }
 
@@ -211,17 +215,21 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: ScreenUtil().setWidth(570),
-        child: ListView.builder(
-          itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
-          itemBuilder: (context, index) {
-            return _goodsItem(index);
-          },
+    if (Provider.of<CategoryGoodsListProvider>(context).goodsList.isEmpty) {
+      return Text('暂无数据');
+    } else {
+      return Expanded(
+        child: Container(
+          width: ScreenUtil().setWidth(570),
+          child: ListView.builder(
+            itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
+            itemBuilder: (context, index) {
+              return _goodsItem(index);
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget _goodsImage(index) {
