@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provide/counter.dart';
 
-class MemberPage extends StatefulWidget {
-  MemberPage({Key key}) : super(key: key);
+class MemberPage extends StatelessWidget {
+  const MemberPage({Key key}) : super(key: key);
 
-  @override
-  _MemberPageState createState() => _MemberPageState();
-}
-
-class _MemberPageState extends State<MemberPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       child: Center(
-         child: Text('会员中心'),
-       ),
+      child: Center(
+        child: Text(
+          '${Provider.of<Counter>(context).value}',
+          style: Theme.of(context).textTheme.display1
+        ),
+      ),
     );
   }
 }
