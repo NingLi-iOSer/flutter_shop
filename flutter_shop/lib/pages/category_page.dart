@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/model/category_goods_list_model.dart';
 import 'package:flutter_shop/model/category_model.dart';
 import 'package:provider/provider.dart';
 import '../service/service_method.dart';
@@ -14,6 +15,7 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +27,8 @@ class _CategoryPageState extends State<CategoryPage> {
               LeftCategoryNav(),
               Column(
                 children: <Widget>[
-                  RightCategoryNav()
+                  RightCategoryNav(),
+                  CategoryGoodsList()
                 ],
               )
             ],
@@ -63,7 +66,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
-          color: isClick ? Colors.black12 : Colors.white,
+          color: isClick ? Color.fromRGBO(242, 242, 242, 1) : Colors.white,
           border: Border(
             bottom: BorderSide(width: 0.5, color: Colors.black12)
           )
@@ -159,6 +162,120 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         itemBuilder: (context, index) {
           return _rightInkWell(Provider.of<ChildCategory>(context).childCategoryList[index]);
         },
+      ),
+    );
+  }
+}
+
+class CategoryGoodsList extends StatefulWidget {
+  @override
+  _CategoryGoodsListState createState() => _CategoryGoodsListState();
+}
+
+class _CategoryGoodsListState extends State<CategoryGoodsList> {
+  
+  /// 分类商品
+  List<CategoryGoodsModel> goodsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getMallGoods();
+  } 
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: ScreenUtil().setWidth(570),
+      height: ScreenUtil().setHeight(964),
+      child: ListView.builder(
+        itemCount: goodsList.length,
+        itemBuilder: (context, index) {
+          return _goodsItem(index);
+        },
+      ),
+    );
+  }
+
+  void getMallGoods() async {
+    var formData = {
+      'categoryId': '4',
+      'categorySubId': '',
+      'page': 1
+    };
+    await request('getMallGoods', formData: formData).then((value){
+      var data = json.decode(value.toString());
+      CategoryGoodsListModel model = CategoryGoodsListModel.fromJson(data);
+      setState(() {
+        goodsList = model.data;
+      });
+    });
+  }
+
+  Widget _goodsImage(index) {
+    return Container(
+      width: ScreenUtil().setWidth(200),
+      child: Image.network(goodsList[index].image),
+    );
+  }
+
+  Widget _goodsTitle(index) {
+    return Container(
+      width: ScreenUtil().setWidth(350),
+      margin: EdgeInsets.only(top: 5),
+      child: Text(goodsList[index].goodsName, overflow: TextOverflow.ellipsis,),
+    );
+  }
+
+  Widget _goodsPrice(index) {
+    return Container(
+      width: ScreenUtil().setWidth(350),
+      margin: EdgeInsets.only(top: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Text(
+            '¥${goodsList[index].presentPrice}  ',
+            style: TextStyle(
+              color: Colors.pink,
+              fontSize: ScreenUtil().setSp(28)
+            ),
+          ),
+          Text(
+            '¥${goodsList[index].oriPrice}',
+            style: TextStyle(
+              decoration: TextDecoration.lineThrough,
+              color: Colors.grey,
+              fontSize: ScreenUtil().setSp(24),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _goodsItem(index) {
+    return Container(
+      padding: EdgeInsets.only(top: 5, bottom: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            width: 0.5,
+            color: Colors.black12
+          )
+        )
+      ),
+      child: Row(
+        children: <Widget>[
+          _goodsImage(index),
+          Column(
+            children: <Widget>[
+              _goodsTitle(index),
+              _goodsPrice(index)
+            ],
+          )
+        ],
       ),
     );
   }
