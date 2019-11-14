@@ -7,6 +7,4 @@ class Counter with ChangeNotifier {
     value++;
     notifyListeners();
   }
-
-  
 }
