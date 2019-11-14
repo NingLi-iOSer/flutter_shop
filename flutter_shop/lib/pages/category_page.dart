@@ -143,15 +143,19 @@ class RightCategoryNav extends StatefulWidget {
 
 class _RightCategoryNavState extends State<RightCategoryNav> {
 
-  Widget _rightInkWell(BxMallSubDtoModel item) {
+  Widget _rightInkWell(int index, BxMallSubDtoModel item) {
     return InkWell(
+      onTap: () {
+        Provider.of<ChildCategory>(context).changeChildIndex(index);
+      },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
         alignment: Alignment.center,
         child: Text(
           item.mallSubName,
           style: TextStyle(
-            fontSize: ScreenUtil().setSp(26)
+            fontSize: ScreenUtil().setSp(26),
+            color: Provider.of<ChildCategory>(context).childIndex == index ? Colors.pink : Colors.black,
           ),
         ),
       ),
@@ -176,7 +180,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         scrollDirection: Axis.horizontal,
         itemCount: Provider.of<ChildCategory>(context).childCategoryList.length,
         itemBuilder: (context, index) {
-          return _rightInkWell(Provider.of<ChildCategory>(context).childCategoryList[index]);
+          return _rightInkWell(index, Provider.of<ChildCategory>(context).childCategoryList[index]);
         },
       ),
     );
@@ -192,14 +196,15 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: ScreenUtil().setWidth(570),
-      height: ScreenUtil().setHeight(964),
-      child: ListView.builder(
-        itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
-        itemBuilder: (context, index) {
-          return _goodsItem(index);
-        },
+    return Expanded(
+      child: Container(
+        width: ScreenUtil().setWidth(570),
+        child: ListView.builder(
+          itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
+          itemBuilder: (context, index) {
+            return _goodsItem(index);
+          },
+        ),
       ),
     );
   }
