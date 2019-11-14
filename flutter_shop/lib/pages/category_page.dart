@@ -59,6 +59,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
           listIndex = index;
         });
         Provider.of<ChildCategory>(context).getChildCategory(
+          categoryList[index].mallCategoryId,
           categoryList[index].bxMallSubDto
         );
         _getMallGoods(categoryId: categoryList[index].mallCategoryId);
@@ -116,7 +117,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         categoryList = list.data;
       });
 
-      Provider.of<ChildCategory>(context).getChildCategory(categoryList[0].bxMallSubDto);
+      Provider.of<ChildCategory>(context).getChildCategory(categoryList[0].mallCategoryId, categoryList[0].bxMallSubDto);
     });
   }
 
@@ -147,6 +148,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
     return InkWell(
       onTap: () {
         Provider.of<ChildCategory>(context).changeChildIndex(index);
+        _getMallGoods(categoryId: item.mallSubId);
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -160,6 +162,19 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
         ),
       ),
     );
+  }
+
+  void _getMallGoods({categoryId}) async {
+    var formData = {
+      'categoryId': Provider.of<ChildCategory>(context).categoryId,
+      'categorySubId': categoryId,
+      'page': 1
+    };
+    await request('getMallGoods', formData: formData).then((value){
+      var data = json.decode(value.toString());
+      CategoryGoodsListModel model = CategoryGoodsListModel.fromJson(data);
+      Provider.of<CategoryGoodsListProvider>(context).getCategoryGoodsList(model.data);
+    });
   }
 
   @override
