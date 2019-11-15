@@ -5,11 +5,17 @@ class ChildCategory with ChangeNotifier {
   List<BxMallSubDtoModel> childCategoryList = [];
   int childIndex = 0;
   String categoryId = '4';
-  String categorySubId = '';
+  String subId = '';
+  int page = 1;
+  String noMoreText = '';
 
-  void getChildCategory(String categoryId, List<BxMallSubDtoModel> list) {
+  void getChildCategory(String id, List<BxMallSubDtoModel> list) {
+    // 切换大类清除数据
     childIndex = 0;
-    categoryId = categoryId;
+    categoryId = id;
+    subId = '';
+    page = 1;
+    noMoreText = '';
 
     BxMallSubDtoModel all = BxMallSubDtoModel();
     all.mallSubName = '全部';
@@ -23,7 +29,18 @@ class ChildCategory with ChangeNotifier {
 
   void changeChildIndex(int index, String categorySubId) {
     childIndex = index;
-    categorySubId = categorySubId;
+    subId = categorySubId;
+    noMoreText = '';
+    page = 1;
+    notifyListeners();
+  }
+
+  void increacePage() {
+    page++;
+  }
+
+  void changeNoMore(String text) {
+    noMoreText = text;
     notifyListeners();
   }
 }

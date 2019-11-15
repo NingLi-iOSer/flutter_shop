@@ -9,4 +9,9 @@ class CategoryGoodsListProvider with ChangeNotifier {
     goodsList = list;
     notifyListeners();
   }
+
+  getMoreGoodsList(List<CategoryGoodsModel> list) {
+    goodsList.addAll(list);
+    notifyListeners();
+  }
 }

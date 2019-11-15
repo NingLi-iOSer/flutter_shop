@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/category_goods_list_model.dart';
 import 'package:flutter_shop/model/category_model.dart';
@@ -147,7 +148,7 @@ class _RightCategoryNavState extends State<RightCategoryNav> {
   Widget _rightInkWell(int index, BxMallSubDtoModel item) {
     return InkWell(
       onTap: () {
-        Provider.of<ChildCategory>(context).changeChildIndex(index);
+        Provider.of<ChildCategory>(context).changeChildIndex(index, item.mallSubId);
         _getMallGoods(categoryId: item.mallSubId);
       },
       child: Container(
@@ -213,23 +214,63 @@ class CategoryGoodsList extends StatefulWidget {
 
 class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     if (Provider.of<CategoryGoodsListProvider>(context).goodsList.isEmpty) {
       return Text('暂无数据');
     } else {
+      try {
+        if (Provider.of<ChildCategory>(context).page == 1) {
+          scrollController.jumpTo(0);
+        }
+      } catch (e) {
+      }
       return Expanded(
         child: Container(
           width: ScreenUtil().setWidth(570),
-          child: ListView.builder(
-            itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
-            itemBuilder: (context, index) {
-              return _goodsItem(index);
+          child: EasyRefresh(
+            footer: ClassicalFooter(
+              key: Key('footer'),
+              noMoreText: Provider.of<ChildCategory>(context).noMoreText,
+              loadText: 'Loading',
+              loadReadyText: 'Ready to load',
+              loadedText: '加载完成',
+              showInfo: false
+            ),
+            child: ListView.builder(
+              itemCount: Provider.of<CategoryGoodsListProvider>(context).goodsList.length,
+              itemBuilder: (context, index) {
+                return _goodsItem(index);
+              },
+              controller: scrollController,
+            ),
+            onLoad: () async {
+              _getMoreGoods();
             },
           ),
         ),
       );
     }
+  }
+
+  void _getMoreGoods() {
+    Provider.of<ChildCategory>(context).increacePage();
+    var formData = {
+      'categoryId': Provider.of<ChildCategory>(context).categoryId,
+      'categorySubId': Provider.of<ChildCategory>(context).subId,
+      'page': Provider.of<ChildCategory>(context).page
+    };
+    request('getMallGoods', formData: formData).then((value){
+      var data = json.decode(value.toString());
+      CategoryGoodsListModel model = CategoryGoodsListModel.fromJson(data);
+      if (model.data == null) {
+        Provider.of<ChildCategory>(context).changeNoMore('没有更多了');
+      } else {
+        Provider.of<CategoryGoodsListProvider>(context).getMoreGoodsList(model.data);
+      }
+    });
   }
 
   Widget _goodsImage(index) {
