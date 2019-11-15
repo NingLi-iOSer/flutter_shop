@@ -3,6 +3,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/category_goods_list_model.dart';
 import 'package:flutter_shop/model/category_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../service/service_method.dart';
 import 'dart:convert';
@@ -255,6 +256,7 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
     }
   }
 
+  // 加载更多商品
   void _getMoreGoods() {
     Provider.of<ChildCategory>(context).increacePage();
     var formData = {
@@ -266,6 +268,13 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
       var data = json.decode(value.toString());
       CategoryGoodsListModel model = CategoryGoodsListModel.fromJson(data);
       if (model.data == null) {
+        Fluttertoast.showToast(
+          msg: '没有更多了',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.pink,
+          textColor: Colors.white,
+        );
         Provider.of<ChildCategory>(context).changeNoMore('没有更多了');
       } else {
         Provider.of<CategoryGoodsListProvider>(context).getMoreGoodsList(model.data);
