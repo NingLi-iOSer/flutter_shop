@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_shop/routers/application.dart';
 import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -124,7 +125,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   Widget _wrapList() {
     List<Widget> goodsList = hotGoodsList.map((value){
       return InkWell(
-        onTap: (){},
+        onTap: (){
+          Application.router.navigateTo(context, '/detail?id=${value['goodsId']}');
+        },
         child: Container(
           padding: EdgeInsets.all(5),
           margin: EdgeInsets.only(bottom: 3),
