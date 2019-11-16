@@ -6,6 +6,13 @@ import 'package:flutter_shop/service/service_method.dart';
 class DetailInfoProvider with ChangeNotifier {
   DetailModel detail;
 
+  bool isSelectedLeft = true;
+
+  changeTabbarStatus(bool isLeft) {
+    isSelectedLeft = isLeft;
+    notifyListeners();
+  }
+
   getDetailInfo(String id) async {
     Map parameter = {'goodId': id};
     await request('getGoodDetailById', formData: parameter).then((value) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/pages/detail_page/detail_explain.dart';
+import 'package:flutter_shop/pages/detail_page/detail_tabbar.dart';
 import 'package:flutter_shop/pages/detail_page/detail_top_area.dart';
 import 'package:flutter_shop/service/service_method.dart';
 import 'package:provider/provider.dart';
@@ -28,10 +29,11 @@ class DetailPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Container(
-              child: Column(
+              child: ListView(
                 children: <Widget>[
                   DetailTopArea(),
-                  DetailExplain()
+                  DetailExplain(),
+                  DetailTabbar()
                 ],
               ),
             );

@@ -11,8 +11,8 @@ class DetailExplain extends StatelessWidget {
       height: ScreenUtil().setHeight(88),
       color: Colors.white,
       alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(top: 10, bottom: 10),
-      padding: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.only(left: 12),
+      margin: EdgeInsets.only(top: 10),
       child: Text(
         '说明：>急速送达 >正品保证',
         style: TextStyle(

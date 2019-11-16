@@ -33,7 +33,7 @@ class DetailTopArea extends StatelessWidget {
   Widget _goodsName(name) {
     return Container(
       width: ScreenUtil().setWidth(730),
-      padding: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.only(left: 8),
       color: Colors.white,
       child: Text(
         name,
@@ -49,7 +49,7 @@ class DetailTopArea extends StatelessWidget {
   Widget _goodsNum(num) {
     return Container(
       width: ScreenUtil().setWidth(730),
-      padding: EdgeInsets.only(left: 10, top: 6),
+      padding: EdgeInsets.only(left: 8, top: 6),
       color: Colors.white,
       child: Text(
         '编号：$num',
@@ -64,7 +64,7 @@ class DetailTopArea extends StatelessWidget {
   Widget _goodsPrice(price, originalPrice) {
     return Container(
       width: ScreenUtil().setWidth(730),
-      padding: EdgeInsets.only(left: 10, top: 10),
+      padding: EdgeInsets.only(left: 8, top: 10, bottom: 8),
       color: Colors.white,
       child: Row(
         children: <Widget>[
