@@ -12,7 +12,7 @@ class DetailExplain extends StatelessWidget {
       color: Colors.white,
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.only(left: 12),
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Text(
         '说明：>急速送达 >正品保证',
         style: TextStyle(

@@ -25,7 +25,6 @@ class DetailTabbar extends StatelessWidget {
       },
       child: Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.only(top: 10),
         padding: EdgeInsets.all(10),
         width: ScreenUtil().setWidth(375),
         decoration: BoxDecoration(

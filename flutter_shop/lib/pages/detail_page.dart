@@ -3,7 +3,6 @@ import 'package:flutter_shop/pages/detail_page/detail_explain.dart';
 import 'package:flutter_shop/pages/detail_page/detail_tabbar.dart';
 import 'package:flutter_shop/pages/detail_page/detail_top_area.dart';
 import 'package:flutter_shop/pages/detail_page/detail_web.dart';
-import 'package:flutter_shop/service/service_method.dart';
 import 'package:provider/provider.dart';
 import '../provide/detail_info_provider.dart';
 
