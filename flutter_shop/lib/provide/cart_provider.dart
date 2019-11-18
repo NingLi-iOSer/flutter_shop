@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CartProvider with ChangeNotifier {
   List<CartInfoModel> cartList = [];
 
+  // 加入购物车
   save(goodsId, goodsName, count, price, oriPrice, images) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String cartString = preferences.getString('cartInfo');
@@ -32,7 +33,8 @@ class CartProvider with ChangeNotifier {
         'count': count,
         'price': price,
         'oriPrice': oriPrice,
-        'images': images
+        'images': images,
+        'isSelected': true
       };
       tempList.add(newInfo);
       cartList.add(CartInfoModel.fromJson(newInfo));
@@ -43,6 +45,7 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // 清空购物车
   clear() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('cartInfo');
@@ -52,15 +55,41 @@ class CartProvider with ChangeNotifier {
     print('清空完成');
   }
 
+  // 获取购物车商品信息
   getCartInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String cartString = preferences.getString('cartInfo');
     var temp = (cartString == null) ? [] : json.decode(cartString);
     List<Map> tempList = (temp as List).cast();
-    if (!tempList.isEmpty) {
+    if (tempList.isNotEmpty) {
       cartList = tempList.map((item) {
         return CartInfoModel.fromJson(item);
       }).toList();
+    }
+  }
+
+  // 删除购物车商品
+  deleteCartGoods(String goodsId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String cartString = preferences.getString('cartInfo');
+    var temp = (cartString == null) ? [] : json.decode(cartString);
+    List<Map> tempList = (temp as List).cast();
+
+    int deleteIndex = -1;
+    for (var i = 0; i < tempList.length; i++) {
+      Map<String, dynamic> item = tempList[i];
+      if (item['goodsId'] == goodsId) {
+        deleteIndex = i;
+        break;
+      }
+    }
+
+    if (deleteIndex != -1) {
+      cartList.removeAt(deleteIndex);
+      tempList.removeAt(deleteIndex);
+      cartString = json.encode(tempList);
+      preferences.setString('cartInfo', cartString);
+      notifyListeners();
     }
   }
 }
