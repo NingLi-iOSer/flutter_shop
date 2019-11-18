@@ -9,7 +9,12 @@ class CartToolbar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(5, 5, 10, 5),
       height: ScreenUtil().setHeight(100),
-      color: Colors.white,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: <BoxShadow>[
+          BoxShadow(color: Color.fromRGBO(232, 232, 232, 0.6), offset: Offset(0, -1), blurRadius: 1)
+        ]
+      ),
       child: Row(
         children: <Widget>[
           _select(),

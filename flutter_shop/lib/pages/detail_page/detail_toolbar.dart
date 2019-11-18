@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/detail_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../provide/detail_info_provider.dart';
 import '../../provide/cart_provider.dart';
@@ -28,6 +29,11 @@ class DetailToolbar extends StatelessWidget {
             onTap: () {
               GoodInfo goodInfo = Provider.of<DetailInfoProvider>(context).detail.data.goodInfo;
               Provider.of<CartProvider>(context).save(goodInfo.goodsId, goodInfo.goodsName, 1, goodInfo.presentPrice, goodInfo.oriPrice, goodInfo.image1);
+              Fluttertoast.showToast(
+                msg: '加入购物车成功',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+              );
             },
             child: Container(
               height: ScreenUtil().setHeight(88),
