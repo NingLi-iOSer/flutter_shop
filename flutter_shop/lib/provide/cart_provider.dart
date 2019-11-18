@@ -108,4 +108,26 @@ class CartProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // 修改购物车商品数量
+  modifyCartGoodsCount(String goodsId, int count) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String cartString = preferences.getString('cartInfo');
+    var temp = (cartString == null) ? [] : json.decode(cartString);
+    List<Map> tempList = (temp as List).cast();
+
+    int index = 0;
+    for (var i = 0; i < tempList.length; i++) {
+      Map<String, dynamic> item = tempList[i];
+      if (item['goodsId'] == goodsId) {
+        index = i;
+        tempList[index]['count'] = count;
+        cartList[index].count = count;
+        cartString = json.encode(tempList);
+        preferences.setString('cartInfo', cartString);
+        getCartInfo();
+        break;
+      }
+    }
+  }
 }

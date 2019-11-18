@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/provide/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class CartCount extends StatelessWidget {
 
   int count = 0;
+  final String goodsId;
 
-  CartCount(this.count);
+  CartCount(this.goodsId, this.count);
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +21,24 @@ class CartCount extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          _operateButton(true),
+          _operateButton(context, true),
           _countWdget(),
-          _operateButton(false),
+          _operateButton(context, false),
         ],
       ),
     );
   }
 
   // 加减按钮
-  Widget _operateButton(bool isReduce) {
+  Widget _operateButton(BuildContext context, bool isReduce) {
     return InkWell(
       onTap: () {
-
+        if (isReduce) {
+          count--;
+        } else {
+          count++;
+        }
+        Provider.of<CartProvider>(context).modifyCartGoodsCount(goodsId, count);
       },
       child: Container(
         alignment: Alignment.center,
