@@ -3,6 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CartCount extends StatelessWidget {
 
+  int count = 0;
+
+  CartCount(this.count);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,7 +53,7 @@ class CartCount extends StatelessWidget {
       height: ScreenUtil().setHeight(50),
       alignment: Alignment.center,
       child: Text(
-        '1'
+        '$count'
       ),
     );
   }

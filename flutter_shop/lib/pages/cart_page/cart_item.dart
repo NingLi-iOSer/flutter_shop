@@ -69,7 +69,7 @@ class CartItem extends StatelessWidget {
             model.goodsName,
             style: TextStyle(color: Colors.black, fontSize: ScreenUtil().setSp(28)),
           ),
-          CartCount(),
+          CartCount(model.count),
         ],
       ),
     );
