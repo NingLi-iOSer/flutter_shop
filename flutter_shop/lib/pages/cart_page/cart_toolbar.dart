@@ -19,7 +19,7 @@ class CartToolbar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          _select(),
+          _select(context),
           _priceArea(context),
           _goButton(context),
         ],
@@ -28,15 +28,15 @@ class CartToolbar extends StatelessWidget {
   }
 
   // 全选
-  Widget _select() {
+  Widget _select(BuildContext context) {
     return Container(
       child: Row(
         children: <Widget>[
           Checkbox(
-            value: true,
+            value: Provider.of<CartProvider>(context).isSelectedAll,
             activeColor: Colors.pink,
             onChanged: (flag) {
-
+              Provider.of<CartProvider>(context).modifySelectedAll(flag);
             },
           ),
           Text(
@@ -66,7 +66,6 @@ class CartToolbar extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: RichText(
                   maxLines: 1,
-                  // overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
                   text: TextSpan(
                     text: '合计：',

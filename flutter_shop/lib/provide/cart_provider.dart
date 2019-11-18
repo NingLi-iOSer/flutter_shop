@@ -11,6 +11,8 @@ class CartProvider with ChangeNotifier {
   double totalPrice = 0;
   // 总数量
   int totalCount = 0;
+  // 全选标记
+  bool isSelectedAll = false;
 
   // 加入购物车
   save(goodsId, goodsName, count, price, oriPrice, images) async {
@@ -76,6 +78,9 @@ class CartProvider with ChangeNotifier {
         }
         return CartInfoModel.fromJson(item);
       }).toList();
+      isSelectedAll = (totalCount == tempList.length);
+    } else {
+      isSelectedAll = false;
     }
 
     totalPrice = tempTotalPrice;
@@ -129,5 +134,45 @@ class CartProvider with ChangeNotifier {
         break;
       }
     }
+  }
+
+  // 修改购物车商品选中状态
+  modifyCartGoodsSelectedStatus(String goodsId, bool isSelected) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String cartString = preferences.getString('cartInfo');
+    var temp = (cartString == null) ? [] : json.decode(cartString);
+    List<Map> tempList = (temp as List).cast();
+
+    int index = 0;
+    for (var i = 0; i < tempList.length; i++) {
+      Map<String, dynamic> item = tempList[i];
+      if (item['goodsId'] == goodsId) {
+        index = i;
+        tempList[index]['isSelected'] = isSelected;
+        cartList[index].isSelected = isSelected;
+        cartString = json.encode(tempList);
+        preferences.setString('cartInfo', cartString);
+        getCartInfo();
+        break;
+      }
+    }
+  }
+
+  // 修改全选状态
+  modifySelectedAll(bool isSelected) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String cartString = preferences.getString('cartInfo');
+    var temp = (cartString == null) ? [] : json.decode(cartString);
+    List<Map> tempList = (temp as List).cast();
+
+    tempList.forEach((item) {
+      item['isSelected'] = isSelected;
+    });
+    cartList.forEach((item) {
+      item.isSelected = isSelected;
+    });
+    cartString = json.encode(tempList);
+    preferences.setString('cartInfo', cartString);
+    getCartInfo();
   }
 }
