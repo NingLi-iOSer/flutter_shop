@@ -33,6 +33,7 @@ class DetailPage extends StatelessWidget {
               alignment: AlignmentDirectional.bottomStart,
               children: <Widget>[
                 Container(
+                  padding: EdgeInsets.only(bottom: 50),
                   child: ListView(
                     children: <Widget>[
                       DetailTopArea(),

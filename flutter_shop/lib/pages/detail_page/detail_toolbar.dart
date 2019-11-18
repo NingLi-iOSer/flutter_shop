@@ -27,7 +27,7 @@ class DetailToolbar extends StatelessWidget {
           InkWell(
             onTap: () {
               GoodInfo goodInfo = Provider.of<DetailInfoProvider>(context).detail.data.goodInfo;
-              Provider.of<CartProvider>(context).save(goodInfo.goodsId, goodInfo.goodsName, 1, goodInfo.presentPrice, goodInfo.image1);
+              Provider.of<CartProvider>(context).save(goodInfo.goodsId, goodInfo.goodsName, 1, goodInfo.presentPrice, goodInfo.oriPrice, goodInfo.image1);
             },
             child: Container(
               height: ScreenUtil().setHeight(88),

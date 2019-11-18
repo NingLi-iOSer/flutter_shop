@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_shop/model/cart_info_model.dart';
+import 'package:flutter_shop/pages/cart_item.dart';
+import 'package:provider/provider.dart';
+import '../provide/cart_provider.dart';
 
 class CartPage extends StatefulWidget {
   CartPage({Key key}) : super(key: key);
@@ -15,56 +18,33 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-       child: Column(
-         children: <Widget>[
-           Container(
-             height: ScreenUtil().setHeight(500),
-             child: ListView.builder(
-               itemCount: testList.length,
-               itemBuilder: (context, index) {
-                 return ListTile(title: Text(testList[index]),);
-               },
-             ),
-           ),
-
-           RaisedButton(
-             child: Text('add'),
-             onPressed: _add,
-           ),
-
-           RaisedButton(
-             child: Text('delete'),
-             onPressed: _delete,
-           )
-         ],
-       )
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('购物车'),
+      ),
+      body: FutureBuilder(
+        future: _getCartInfo(),
+        builder: (context, snapshot) {
+          List<CartInfoModel> cartList = Provider.of<CartProvider>(context).cartList;
+          if (snapshot.hasData) {
+            return Container(
+              child: ListView.builder(
+                itemCount: cartList.length,
+                itemBuilder: (context, index) {
+                  return CartItem(cartList[index]);
+                },
+              ),
+            );
+          } else {
+            return Text('暂无数据');
+          }
+        },
+      ),
     );
   }
 
-  void _add() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String testString = "Test String";
-    testList.add(testString);
-    preferences.setStringList('test', testList);
-    _show();
-  }
-
-  void _delete() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove('test');
-    setState(() {
-      testList = [];
-    });
-  }
-
-  void _show() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var list = preferences.getStringList('test');
-    if (list != null) {
-      setState(() {
-        testList = list;
-      });
-    }
+  Future _getCartInfo() async {
+    await Provider.of<CartProvider>(context).getCartInfo();
+    return 'end';
   }
 }
