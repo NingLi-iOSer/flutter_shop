@@ -30,7 +30,6 @@ class DetailPage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Stack(
-              alignment: AlignmentDirectional.bottomStart,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.only(bottom: 50),
@@ -43,7 +42,12 @@ class DetailPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                DetailToolbar()
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: DetailToolbar(),
+                ),
               ],
             );
           } else {
