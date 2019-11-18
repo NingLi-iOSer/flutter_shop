@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CartProvider with ChangeNotifier {
   List<CartInfoModel> cartList = [];
+  // 总价
+  double totalPrice = 0;
+  // 总数量
+  int totalCount = 0;
 
   // 加入购物车
   save(goodsId, goodsName, count, price, oriPrice, images) async {
@@ -61,11 +65,23 @@ class CartProvider with ChangeNotifier {
     String cartString = preferences.getString('cartInfo');
     var temp = (cartString == null) ? [] : json.decode(cartString);
     List<Map> tempList = (temp as List).cast();
+
+    double tempTotalPrice = 0;
+    int tempTotalCount = 0;
     if (tempList.isNotEmpty) {
       cartList = tempList.map((item) {
+        if (item['isSelected'] == true) {
+          tempTotalCount++;
+          tempTotalPrice += (item['price'] * item['count']);
+        }
         return CartInfoModel.fromJson(item);
       }).toList();
     }
+
+    totalPrice = tempTotalPrice;
+    totalCount = tempTotalCount;
+
+    notifyListeners();
   }
 
   // 删除购物车商品

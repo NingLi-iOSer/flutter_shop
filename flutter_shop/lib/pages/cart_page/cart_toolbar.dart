@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/provide/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class CartToolbar extends StatelessWidget {
   const CartToolbar({Key key}) : super(key: key);
@@ -18,8 +20,8 @@ class CartToolbar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           _select(),
-          _priceArea(),
-          _goButton(),
+          _priceArea(context),
+          _goButton(context),
         ],
       ),
     );
@@ -49,7 +51,7 @@ class CartToolbar extends StatelessWidget {
   }
 
   // 合计
-  Widget _priceArea() {
+  Widget _priceArea(BuildContext context) {
     return Container(
       width: ScreenUtil().setWidth(430),
       child: Column(
@@ -71,7 +73,7 @@ class CartToolbar extends StatelessWidget {
                     style: TextStyle(fontSize: ScreenUtil().setSp(32), color: Colors.black),
                     children: <TextSpan>[
                       TextSpan(
-                        text: '¥19999',
+                        text: '¥${Provider.of<CartProvider>(context).totalPrice}',
                         style: TextStyle(fontSize: ScreenUtil().setSp(32), color: Colors.pink),
                       )
                     ]
@@ -93,7 +95,7 @@ class CartToolbar extends StatelessWidget {
   }
 
   // 结算
-  Widget _goButton() {
+  Widget _goButton(BuildContext context) {
     return InkWell(
       onTap: () {},
       child: Container(
@@ -105,7 +107,7 @@ class CartToolbar extends StatelessWidget {
           borderRadius: BorderRadius.circular(4)
         ),
         child: Text(
-          '结算(2)',
+          '结算(${Provider.of<CartProvider>(context).totalCount})',
           style: TextStyle(
             color: Colors.white
           ),
