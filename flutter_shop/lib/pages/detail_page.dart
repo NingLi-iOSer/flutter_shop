@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/pages/detail_page/detail_explain.dart';
 import 'package:flutter_shop/pages/detail_page/detail_tabbar.dart';
+import 'package:flutter_shop/pages/detail_page/detail_toolbar.dart';
 import 'package:flutter_shop/pages/detail_page/detail_top_area.dart';
 import 'package:flutter_shop/pages/detail_page/detail_web.dart';
 import 'package:provider/provider.dart';
@@ -28,15 +29,21 @@ class DetailPage extends StatelessWidget {
         future: _getGoodInfo(context),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Container(
-              child: ListView(
-                children: <Widget>[
-                  DetailTopArea(),
-                  DetailExplain(),
-                  DetailTabbar(),
-                  DetailWeb()
-                ],
-              ),
+            return Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: <Widget>[
+                Container(
+                  child: ListView(
+                    children: <Widget>[
+                      DetailTopArea(),
+                      DetailExplain(),
+                      DetailTabbar(),
+                      DetailWeb()
+                    ],
+                  ),
+                ),
+                DetailToolbar()
+              ],
             );
           } else {
             return Text('Loading');
