@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/model/detail_model.dart';
+import 'package:provider/provider.dart';
+import '../../provide/detail_info_provider.dart';
+import '../../provide/cart_provider.dart';
 
 class DetailToolbar extends StatelessWidget {
   const DetailToolbar({Key key}) : super(key: key);
@@ -12,14 +16,19 @@ class DetailToolbar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Provider.of<CartProvider>(context).clear();
+            },
             child: Container(
               width: ScreenUtil().setWidth(110),
               child: Icon(Icons.shopping_cart, color: Colors.red, size: 32),
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              GoodInfo goodInfo = Provider.of<DetailInfoProvider>(context).detail.data.goodInfo;
+              Provider.of<CartProvider>(context).save(goodInfo.goodsId, goodInfo.goodsName, 1, goodInfo.presentPrice, goodInfo.image1);
+            },
             child: Container(
               height: ScreenUtil().setHeight(88),
               width: ScreenUtil().setWidth(320),

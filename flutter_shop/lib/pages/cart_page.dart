@@ -1,48 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../provide/counter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CartPage extends StatelessWidget {
-  const CartPage({Key key}) : super(key: key);
+class CartPage extends StatefulWidget {
+  CartPage({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Number(),
-            MyButton()
-          ],
-        ),
-      ),
-    );
-  }
+  _CartPageState createState() => _CartPageState();
 }
 
-class Number extends StatelessWidget {
+class _CartPageState extends State<CartPage> {
+
+  List<String> testList = [];
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 200),
-      child: Text(
-        '${Provider.of<Counter>(context).value}',
-        style: Theme.of(context).textTheme.display1
-      ),
+       child: Column(
+         children: <Widget>[
+           Container(
+             height: ScreenUtil().setHeight(500),
+             child: ListView.builder(
+               itemCount: testList.length,
+               itemBuilder: (context, index) {
+                 return ListTile(title: Text(testList[index]),);
+               },
+             ),
+           ),
+
+           RaisedButton(
+             child: Text('add'),
+             onPressed: _add,
+           ),
+
+           RaisedButton(
+             child: Text('delete'),
+             onPressed: _delete,
+           )
+         ],
+       )
     );
   }
-}
 
-class MyButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: RaisedButton(
-        child: Text('+'),
-        onPressed: (){
-          Provider.of<Counter>(context).increace();
-        },
-      ),
-    );
+  void _add() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String testString = "Test String";
+    testList.add(testString);
+    preferences.setStringList('test', testList);
+    _show();
+  }
+
+  void _delete() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove('test');
+    setState(() {
+      testList = [];
+    });
+  }
+
+  void _show() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var list = preferences.getStringList('test');
+    if (list != null) {
+      setState(() {
+        testList = list;
+      });
+    }
   }
 }

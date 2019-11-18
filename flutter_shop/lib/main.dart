@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_shop/provide/cart_provider.dart';
 import 'package:flutter_shop/provide/category_goods_list_provider.dart';
 import 'package:flutter_shop/provide/child_category.dart';
 import 'package:flutter_shop/provide/counter.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider.value(value: ChildCategory()),
         ChangeNotifierProvider.value(value: CategoryGoodsListProvider()),
         ChangeNotifierProvider.value(value: DetailInfoProvider()),
+        ChangeNotifierProvider.value(value: CartProvider()),
       ],
       child: MyApp(),
     )
