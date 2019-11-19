@@ -3,6 +3,7 @@ import 'package:flutter_shop/provide/cart_provider.dart';
 import 'package:flutter_shop/provide/category_goods_list_provider.dart';
 import 'package:flutter_shop/provide/child_category.dart';
 import 'package:flutter_shop/provide/counter.dart';
+import 'package:flutter_shop/provide/current_index_provider.dart';
 import 'package:flutter_shop/provide/detail_info_provider.dart';
 import 'package:flutter_shop/routers/application.dart';
 import 'package:flutter_shop/routers/routers.dart';
@@ -19,6 +20,7 @@ void main() {
         ChangeNotifierProvider.value(value: CategoryGoodsListProvider()),
         ChangeNotifierProvider.value(value: DetailInfoProvider()),
         ChangeNotifierProvider.value(value: CartProvider()),
+        ChangeNotifierProvider.value(value: CurrentIndexProvider()),
       ],
       child: MyApp(),
     )

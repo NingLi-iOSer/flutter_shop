@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/detail_model.dart';
+import 'package:flutter_shop/provide/current_index_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../provide/detail_info_provider.dart';
@@ -18,7 +19,8 @@ class DetailToolbar extends StatelessWidget {
         children: <Widget>[
           InkWell(
             onTap: () {
-              Provider.of<CartProvider>(context).clear();
+              Provider.of<CurrentIndexProvider>(context).changeIndex(2);
+              Navigator.pop(context);
             },
             child: Container(
               width: ScreenUtil().setWidth(110),
@@ -50,7 +52,9 @@ class DetailToolbar extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Provider.of<CartProvider>(context).clear();
+            },
             child: Container(
               height: ScreenUtil().setHeight(88),
               width: ScreenUtil().setWidth(320),

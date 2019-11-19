@@ -3,6 +3,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/model/category_goods_list_model.dart';
 import 'package:flutter_shop/model/category_model.dart';
+import 'package:flutter_shop/routers/application.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../service/service_method.dart';
@@ -325,7 +326,9 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
   Widget _goodsItem(index) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Application.router.navigateTo(context, '/detail?id=${Provider.of<CategoryGoodsListProvider>(context).goodsList[index].goodsId}');
+      },
       child: Container(
         padding: EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
