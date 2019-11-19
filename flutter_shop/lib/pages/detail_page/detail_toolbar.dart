@@ -17,15 +17,40 @@ class DetailToolbar extends StatelessWidget {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          InkWell(
-            onTap: () {
-              Provider.of<CurrentIndexProvider>(context).changeIndex(2);
-              Navigator.pop(context);
-            },
-            child: Container(
-              width: ScreenUtil().setWidth(110),
-              child: Icon(Icons.shopping_cart, color: Colors.red, size: 32),
-            ),
+          Stack(
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  Provider.of<CurrentIndexProvider>(context).changeIndex(2);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: ScreenUtil().setWidth(110),
+                  height: ScreenUtil().setHeight(88),
+                  child: Icon(Icons.shopping_cart, color: Colors.red, size: 32),
+                ),
+              ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                  decoration: BoxDecoration(
+                    color: Colors.pink,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(width: 1, color: Colors.white)
+                  ),
+                  child: Text(
+                    '${Provider.of<CartProvider>(context).totalCount}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: ScreenUtil().setSp(22)
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
           InkWell(
             onTap: () {

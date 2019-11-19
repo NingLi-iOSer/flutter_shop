@@ -72,7 +72,7 @@ class CartToolbar extends StatelessWidget {
                     style: TextStyle(fontSize: ScreenUtil().setSp(32), color: Colors.black),
                     children: <TextSpan>[
                       TextSpan(
-                        text: '¥${Provider.of<CartProvider>(context).totalPrice}',
+                        text: '¥${Provider.of<CartProvider>(context).selectedPrice}',
                         style: TextStyle(fontSize: ScreenUtil().setSp(32), color: Colors.pink),
                       )
                     ]
@@ -106,7 +106,7 @@ class CartToolbar extends StatelessWidget {
           borderRadius: BorderRadius.circular(4)
         ),
         child: Text(
-          '结算(${Provider.of<CartProvider>(context).totalCount})',
+          '结算(${Provider.of<CartProvider>(context).selectedCount})',
           style: TextStyle(
             color: Colors.white
           ),

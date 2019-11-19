@@ -7,12 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CartProvider with ChangeNotifier {
   List<CartInfoModel> cartList = [];
-  // 总价
-  double totalPrice = 0;
-  // 总数量
-  int totalCount = 0;
+  // 选中的价格
+  double selectedPrice = 0;
+  // 选中的数量
+  int selectedCount = 0;
   // 全选标记
   bool isSelectedAll = false;
+  // 总数量
+  int totalCount = 0;
 
   // 加入购物车
   save(goodsId, goodsName, count, price, oriPrice, images) async {
@@ -20,6 +22,10 @@ class CartProvider with ChangeNotifier {
     String cartString = preferences.getString('cartInfo');
     var temp = (cartString == null) ? [] : json.decode(cartString);
     List<Map> tempList = (temp as List).cast();
+
+    selectedPrice = 0;
+    selectedCount = 0;
+    totalCount = 0;
 
     bool isHave = false;
     int index = 0;
@@ -29,6 +35,11 @@ class CartProvider with ChangeNotifier {
         cartList[index].count++;
         isHave = true;
       }
+      if (item['isSelected']) {
+        selectedPrice += (cartList[index].count * price);
+        selectedCount++;
+      }
+      totalCount += cartList[index].count;
       index++;
     });
 
@@ -44,6 +55,10 @@ class CartProvider with ChangeNotifier {
       };
       tempList.add(newInfo);
       cartList.add(CartInfoModel.fromJson(newInfo));
+
+      selectedPrice += (count * price);
+      selectedCount++;
+      totalCount++;
     }
 
     cartString = json.encode(tempList);
@@ -70,22 +85,25 @@ class CartProvider with ChangeNotifier {
 
     double tempTotalPrice = 0;
     int tempTotalCount = 0;
+    totalCount = 0;
     if (tempList.isNotEmpty) {
       cartList = tempList.map((item) {
         if (item['isSelected'] == true) {
           tempTotalCount++;
           tempTotalPrice += (item['price'] * item['count']);
         }
+        totalCount += item['count'];
         return CartInfoModel.fromJson(item);
       }).toList();
-      isSelectedAll = (totalCount == tempList.length);
+      isSelectedAll = (selectedCount == tempList.length);
     } else {
       isSelectedAll = false;
       cartList = [];
+      totalCount = 0;
     }
 
-    totalPrice = tempTotalPrice;
-    totalCount = tempTotalCount;
+    selectedPrice = tempTotalPrice;
+    selectedCount = tempTotalCount;
 
     notifyListeners();
   }
