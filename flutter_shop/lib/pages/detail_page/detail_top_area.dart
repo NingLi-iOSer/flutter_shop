@@ -23,9 +23,12 @@ class DetailTopArea extends StatelessWidget {
 
   // 商品图片
   Widget _goodsImage(image) {
-    return Image.network(
-      image,
-      width: ScreenUtil().setWidth(740),
+    return Container(
+      width: ScreenUtil().setWidth(750),
+      child: FadeInImage.assetNetwork(
+        image: image,
+        placeholder: 'images/placeholder.png',
+      ),
     );
   }
 
