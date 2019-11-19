@@ -81,6 +81,7 @@ class CartProvider with ChangeNotifier {
       isSelectedAll = (totalCount == tempList.length);
     } else {
       isSelectedAll = false;
+      cartList = [];
     }
 
     totalPrice = tempTotalPrice;
@@ -130,7 +131,7 @@ class CartProvider with ChangeNotifier {
         cartList[index].count = count;
         cartString = json.encode(tempList);
         preferences.setString('cartInfo', cartString);
-        getCartInfo();
+        await getCartInfo();
         break;
       }
     }
@@ -152,7 +153,7 @@ class CartProvider with ChangeNotifier {
         cartList[index].isSelected = isSelected;
         cartString = json.encode(tempList);
         preferences.setString('cartInfo', cartString);
-        getCartInfo();
+        await getCartInfo();
         break;
       }
     }
@@ -173,6 +174,6 @@ class CartProvider with ChangeNotifier {
     });
     cartString = json.encode(tempList);
     preferences.setString('cartInfo', cartString);
-    getCartInfo();
+    await getCartInfo();
   }
 }

@@ -33,10 +33,12 @@ class CartCount extends StatelessWidget {
   Widget _operateButton(BuildContext context, bool isReduce) {
     return InkWell(
       onTap: () {
-        if (isReduce) {
+        if (isReduce && count > 1) {
           count--;
-        } else {
+        } else if (!isReduce) {
           count++;
+        } else {
+          return;
         }
         Provider.of<CartProvider>(context).modifyCartGoodsCount(goodsId, count);
       },
@@ -45,10 +47,11 @@ class CartCount extends StatelessWidget {
         width: ScreenUtil().setWidth(50),
         height: ScreenUtil().setHeight(50),
         decoration: BoxDecoration(
+          color: (isReduce && count <= 1) ? Colors.black12 : Colors.white,
           border: isReduce ? Border(right: BorderSide(width: 0.5, color: Colors.black26)) : Border(left: BorderSide(width: 0.5, color: Colors.black26))
         ),
         child: Text(
-          isReduce ? '-' : '+'
+          (isReduce && count <= 1) ? '' : isReduce ? '-' : '+'
         ),
       ),
     );
