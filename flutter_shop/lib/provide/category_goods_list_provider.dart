@@ -13,5 +13,6 @@ class CategoryGoodsListProvider with ChangeNotifier {
   getMoreGoodsList(List<CategoryGoodsModel> list) {
     goodsList.addAll(list);
     notifyListeners();
+    print('123');
   }
 }
